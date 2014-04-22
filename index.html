@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+<title>Media Portal</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="normalize.css">
+<link rel="stylesheet" href="bobs-skeleton.css">
+<link rel="stylesheet" href="style.css">
+<script src="js/jquery.js"></script>
+<!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<!--<script src="scripts/jquery2.js"></script>-->
+<!--[if IE]>
+	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<!--[if lt IE 9]>
+	<script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script>
+<![endif]-->
+<script>
+$(document).ready(function(e) {
+	
+	// original
+	$("#mainMenu").load("php-ProcessMenu.php", {category:"xxx"});
+	// tests
+	//$("#mainMenu").load("php-UpdateMediaLibrary.php", {category:"New"});
+	//$("#mainMenu").load("php-ProcessMenu.php", {category:"New"});
+	
+	
+	
+	
+	
+	$("#mainContent .container").load("php-ProcessLayout.php", {category:"New"});
+	
+	setTimeout(init, 2000);
+
+    $("li a").click(function(e){
+		e.preventDefault();
+	});
+	
+	var $headHeight = $("header").height();
+	var $mainHeight = window.innerHeight - $headHeight;
+	$("#mainContent").height($mainHeight);
+	$("#mainContent").css("margin-top",$headHeight);
+
+});
+
+function init(){
+	$("#subMenuMovies .subMenuGroup").load("php-ProcessMenu.php", {category:"Movies"});
+	//$("#subMenuTV .subMenuGroup").load("php-ProcessMenu.php", {category:"TV"});
+	//$("#subMenuMusic").load("php-ProcessMenu.php", {category:"x_Music"});
+
+	$("#iconNew a").addClass("active");
+
+	$("nav li").click(function(){
+		var $this = "#" + $(this).attr("id");
+		closeMenu();
+		if($this == "#iconMovies"){ 
+			$("nav li a").removeClass("active");
+			$($this + " a").addClass("active");
+			$(".subMenu").removeClass("visible");
+			$("#subMenuMovies").addClass("visible");
+			$("#subMenuExt").addClass("onScreen");
+		}else{
+			$("nav li a").removeClass("active");
+			$($this + " a").addClass("active");
+			$(".subMenu").removeClass("visible");
+			var $cat = "";
+			if($this == "#iconNew"){
+				$cat = "New";
+			}else if($this == "#iconTV"){
+				$cat = "TV";
+			}else if($this == "#iconx_Music"){
+				$cat = "x_Music";
+			}
+			$("#mainContent .container").load("php-ProcessLayout.php", {category:$cat});
+		}
+	});
+
+	$("#subMenuExt").click(function(){
+		closeMenu();
+	});	
+	
+	var $thumbHeight = Math.round($("#mainContent ul").width()*1.457);
+	$("#mainContent ul li:first-child").height($thumbHeight);
+	
+	$("footer").css("margin-top",$(".container").height());
+}
+
+function closeMenu(){
+	$(".subMenu").removeClass("visible");
+	$("nav li a").removeClass("active");
+	$("#subMenuExt").removeClass("onScreen");
+}
+</script>
+</head>
+
+<body>
+
+<header>
+	<nav>
+    	<ul id="mainMenu"></ul>
+    </nav>
+</header>
+
+<div id="subMenuMovies" class="subMenu">
+	<ul class="subMenuGroup"></ul>
+</div>
+<div id="subMenuExt"></div>
+
+<section id="mainContent">
+	<div class="container"></div>
+</section>
+
+</body>
+</html>
